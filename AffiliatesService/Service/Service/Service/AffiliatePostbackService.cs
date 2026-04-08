@@ -93,7 +93,7 @@ namespace Service.Service
                 CreatedOn = DateTime.UtcNow,
                 IsActive = true
             };
-            //
+            
             _context.AffiliatePostbacks.Add(entity);
             await _context.SaveChangesAsync();
 
