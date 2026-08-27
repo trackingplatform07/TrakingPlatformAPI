@@ -4,47 +4,49 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace OfferService.API.Controllers
 {
+
+
     [Route("api/[controller]")]
     [ApiController]
-    public class OffersController : ControllerBase
+    public class OfferCategoriesController : ControllerBase
     {
-        private readonly IOffer _service;
+        private readonly IOfferCategory _service;
 
-        public OffersController(IOffer service)
+        public OfferCategoriesController(IOfferCategory service)
         {
             _service = service;
         }
 
-        // GET: api/Offers
+        // GET: api/OfferCategories
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _service.GetAllOffers();
+            var result = await _service.GetAllOfferCategories();
 
             return Ok(result);
         }
 
-        // GET: api/Offers/1
+        // GET: api/OfferCategories/1
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var result = await _service.GetOfferById(id);
+            var result = await _service.GetOfferCategoryById(id);
 
             if (result == null)
             {
                 return NotFound(new
                 {
-                    message = "Offer not found."
+                    message = "Offer Category not found."
                 });
             }
 
             return Ok(result);
         }
 
-        // POST: api/Offers
+        // POST: api/OfferCategories
         [HttpPost]
         public async Task<IActionResult> Create(
-            [FromBody] OfferDto dto)
+            [FromBody] OfferCategoryDto dto)
         {
             if (dto == null)
             {
@@ -54,16 +56,16 @@ namespace OfferService.API.Controllers
                 });
             }
 
-            var result = await _service.CreateOffer(dto);
+            var result = await _service.CreateOfferCategory(dto);
 
             return Ok(result);
         }
 
-        // PUT: api/Offers/1
+        // PUT: api/OfferCategories/1
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(
             int id,
-            [FromBody] OfferDto dto)
+            [FromBody] OfferCategoryDto dto)
         {
             if (dto == null)
             {
@@ -73,37 +75,39 @@ namespace OfferService.API.Controllers
                 });
             }
 
-            var result = await _service.UpdateOffer(id, dto);
+            var result = await _service.UpdateOfferCategory(id, dto);
 
             if (result == null)
             {
                 return NotFound(new
                 {
-                    message = "Offer not found."
+                    message = "Offer Category not found."
                 });
             }
 
             return Ok(result);
         }
 
-        // DELETE: api/Offers/1
+        // DELETE: api/OfferCategories/1
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await _service.DeleteOffer(id);
+            var result = await _service.DeleteOfferCategory(id);
 
             if (!result)
             {
                 return NotFound(new
                 {
-                    message = "Offer not found."
+                    message = "Offer Category not found."
                 });
             }
 
             return Ok(new
             {
-                message = "Offer deleted successfully."
+                message = "Offer Category deleted successfully."
             });
         }
     }
+
+
 }

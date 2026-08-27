@@ -1,46 +1,62 @@
+using Interface.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Options;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi;
+using Microsoft.OpenApi.Models;
 using Serilog;
-using System.Reflection.Metadata;
+using Service.Context;
+using Service.Service;
+using Service.Services;
 using System.Text;
-using System.Threading.Tasks;
 
 public class Program
 {
-
     private static async Task Main(string[] args)
     {
-        // Configure Serilog with the context and logging settings
+        // ---------------- SERILOG ----------------
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console()
-            .WriteTo.File(Path.Combine(AppContext.BaseDirectory, "log", "log-.txt"),
-            rollingInterval: RollingInterval.Day).CreateLogger();
+            .WriteTo.File(
+                Path.Combine(AppContext.BaseDirectory, "log", "log-.txt"),
+                rollingInterval: RollingInterval.Day)
+            .CreateLogger();
 
-        //Log the Application Starttup
-        Log.Information("OfferService -starting up application...");
+        Log.Information("OfferService - Starting Application...");
 
         var builder = WebApplication.CreateBuilder(args);
+
+        // ---------------- CONFIGURATION ----------------
         var configuration = builder.Configuration;
+
         string secretKey = configuration["SecretKey:JwtSecretKey"];
 
-        //string secretkey = configuration["SecretKey:JwtSecrretKey"];
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
+        var key = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(secretKey)
+        );
+
         builder.Configuration.AddEnvironmentVariables();
 
-        Log.Information("OfferService - Configuring Service...");
+        Log.Information("OfferService - Configuring Services...");
 
+        // ---------------- SERVICES ----------------
         builder.Services.AddHttpClient();
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddHttpContextAccessor();
-        builder.Services.AddMvc();
-        //builder.Services.AddScoped<>()
-        //builder.Services.AddScoped<>()
 
-        //builder.Services.AddScoped<IdataService, DataService>();
+        // ---------------- DATABASE ----------------
+        builder.Services.AddDbContext<OfferCategoryDbContext>(options =>
+            options.UseNpgsql(
+                builder.Configuration.GetConnectionString("DefaultConnection")
+            ));
 
+        // ---------------- DEPENDENCY INJECTION ----------------
+        builder.Services.AddScoped<IOfferCategory, OfferCategoryServices>();
+        builder.Services.AddScoped<IOffer, OfferServices>();
+        builder.Services.AddScoped<ILandingPage, LandingPageService>();
+        builder.Services.AddScoped<ITargetingRule, TargetingRuleService>();
+
+        // ---------------- SWAGGER ----------------
         builder.Services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo
@@ -49,159 +65,166 @@ public class Program
                 Version = "v1",
                 Description = "API for managing Offer-related features."
             });
-            c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+
+            c.ResolveConflictingActions(
+                apiDescriptions => apiDescriptions.First()
+            );
 
             c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
-                Description="JWT Authorization header using the Bearer schema",
-                Type= SecuritySchemeType.Http,
-                Scheme="bearer"
+                Description = "JWT Authorization header using the Bearer schema",
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT"
             });
-            //c.AddSecurityRequirement(new OpenApiSecurityRequirement
-            //{
-            //    {
-            //        new OpenApiSecurityScheme
-            //        {
-            //            Reference= new OpenApiReference
-            //            {
-            //                Type=ReferenceType.SecurityScheme, Id="Bearer"
-            //            }
-            //        },
-            //        new string[]{}
-            //    }
-            //});
 
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    },
+                    new string[] {}
+                }
+            });
         });
 
+
+        // ---------------- CORS ----------------
         builder.Services.AddCors(options =>
         {
-            options.AddPolicy("AllowAll",
-                builder =>
-                {
-                    builder.AllowAnyOrigin()
-                           .AllowAnyMethod()
-                           .AllowAnyHeader();
-
-                });
+            options.AddPolicy("AllowAll", policy =>
+            {
+                policy.AllowAnyOrigin()
+                      .AllowAnyMethod()
+                      .AllowAnyHeader();
+            });
         });
 
-        //log authentication configuration
-        Log.Information("OfferService - Configuraing authentication...");
 
-        //Authentication Configration
-        // JWT Authentication
-        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        // ---------------- AUTHENTICATION ----------------
+        Log.Information("OfferService - Configuring Authentication...");
+
+        builder.Services.AddAuthentication(
+            JwtBearerDefaults.AuthenticationScheme
+        )
         .AddJwtBearer(options =>
         {
             options.RequireHttpsMetadata = false;
             options.SaveToken = true;
-            options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = key,
-            ValidateIssuer = false,
-            ValidateAudience = false,
-            ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero
-        };
 
-        options.Events = new JwtBearerEvents
-        {
-            OnChallenge = HandleOnChallengeAsync,
-
-            OnForbidden = HandleOnForbiddenAsync,
-
-            OnAuthenticationFailed = context =>
-            {
-                Log.Error($"Authentication Failed: {context.Exception.Message}");
-                return Task.CompletedTask;
-            },
-
-            OnTokenValidated = context =>
-            {
-                Log.Information("Token validated successfully");
-                return Task.CompletedTask;
-            }
-        };
-            options.RequireHttpsMetadata = false;
-            options.SaveToken = true;
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = key,
+
                 ValidateIssuer = false,
                 ValidateAudience = false,
+
                 ValidateLifetime = true,
                 ClockSkew = TimeSpan.Zero
             };
+
+            options.Events = new JwtBearerEvents
+            {
+                OnChallenge = context =>
+                {
+                    context.HandleResponse();
+                    context.Response.StatusCode = 401;
+
+                    return Task.CompletedTask;
+                },
+
+                OnForbidden = context =>
+                {
+                    context.Response.StatusCode = 403;
+
+                    return Task.CompletedTask;
+                },
+
+                OnAuthenticationFailed = context =>
+                {
+                    Log.Error(
+                        $"Authentication Failed: {context.Exception.Message}"
+                    );
+
+                    return Task.CompletedTask;
+                },
+
+                OnTokenValidated = context =>
+                {
+                    Log.Information("Token validated successfully");
+
+                    return Task.CompletedTask;
+                }
+            };
         });
-      
-        Log.Information("OfferService - Configuration authorization...");
 
-        //Authorization Configuration
-        builder.Services.AddAuthentication(options =>
-        {
-            
 
-        });
+        // ---------------- BUILD APP ----------------
+        var app = builder.Build();
 
-        var app =builder.Build();
+        Log.Information(
+            "OfferService - Application building completed..."
+        );
 
-        //Log Application SetUp Completion
-        Log.Information("OfferService - Offer Service SetUp Complted Application building...");
 
-        //Swagger SetUp For Dev envirment
-        Log.Information("OfferService - Setting up Swagger UI ...");
-        //app.Use(async (context, next) =>
-        //{
-        //    if (context.Request.Path.Value == "/offer/swagger/offer/swagger.json")
-        //    {
-        //        context.Request.Path = "/swagger/offer/swagger.json";
-        //    }
-        //    await next();
-        //});
-        //app.UseSwagger();
-        //app.UseSwaggerUI(opation =>
-        //{
-        //    opation.SwaggerEndpoint("/offer/swagger/offer/swagger.json", "Offer APIs V1");
-        //    opation.RoutePrefix = "offer/swagger";
-        //});
+        // ---------------- SWAGGER ----------------
+        Log.Information(
+            "OfferService - Setting up Swagger UI..."
+        );
+
         app.UseSwagger();
 
         app.UseSwaggerUI(options =>
         {
             options.RoutePrefix = "offer/swagger";
-            options.SwaggerEndpoint("/swagger/v1/swagger.json", "Offer API V1");
+
+            options.SwaggerEndpoint(
+                "/swagger/v1/swagger.json",
+                "Offer API V1"
+            );
         });
-        //log ,iddleware confing
-        Log.Information("OfferService - Configuring middleware..");
+
+
+        // ---------------- MIDDLEWARE ----------------
+        Log.Information(
+            "OfferService - Configuring Middleware..."
+        );
+
         app.UseCors("AllowAll");
-        app.UseAuthentication();
+
         app.UseRouting();
+
+        app.UseAuthentication();
+
         app.UseAuthorization();
+
+
+        // ---------------- CONTROLLERS ----------------
         app.MapControllers();
 
+
+        // ---------------- HEALTH CHECK ----------------
         app.MapGet("/offer", async context =>
         {
-            await context.Response.WriteAsync("Listening offer Service....");
+            await context.Response.WriteAsync(
+                "Listening offer Service...."
+            );
         });
-        //log when the application ready
-        Log.Information("OfferService - application is ready to handle request");
+
+
+        Log.Information(
+            "OfferService - Application is ready to handle requests."
+        );
+
         app.Run();
     }
-
-    private static Task HandleOnChallengeAsync(JwtBearerChallengeContext context)
-    {
-        context.HandleResponse();
-        context.Response.StatusCode=StatusCodes.Status401Unauthorized; 
-        return Task.CompletedTask;
-    }
-
-
-    private static Task HandleOnForbiddenAsync(ForbiddenContext context)
-    {
-        context.Response.StatusCode = StatusCodes.Status403Forbidden; 
-        return Task.CompletedTask;
-    }
-
 }
