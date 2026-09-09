@@ -15,7 +15,7 @@ namespace Service.Context
         public DbSet<Offer> Offer { get; set; }
         public DbSet<LandingPage> LandingPage { get; set; }
         public DbSet<TargetingRules> TargetingRules { get; set; }
-
+        public DbSet<Creative> Creative { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

@@ -55,7 +55,7 @@ public class Program
         builder.Services.AddScoped<IOffer, OfferServices>();
         builder.Services.AddScoped<ILandingPage, LandingPageService>();
         builder.Services.AddScoped<ITargetingRule, TargetingRuleService>();
-
+        builder.Services.AddScoped<ICreative, CreativeService>();
         // ---------------- SWAGGER ----------------
         builder.Services.AddSwaggerGen(c =>
         {
