@@ -56,6 +56,31 @@ public class Program
         builder.Services.AddScoped<ILandingPage, LandingPageService>();
         builder.Services.AddScoped<ITargetingRule, TargetingRuleService>();
         builder.Services.AddScoped<ICreative, CreativeService>();
+        builder.Services.AddScoped<ICappingRule, CappingRuleService>();
+        builder.Services.AddScoped<IEventSetting, EventSettingService>();
+        builder.Services.AddScoped<IPayoutRule, PayoutRuleService>();
+        builder.Services.AddScoped<IEventGoal, EventGoalService>();
+        builder.Services.AddScoped<IFallbackIntegration, FallbackIntegrationService>();
+        builder.Services.AddScoped<IAntiFraudSetting, AntiFraudSettingService>();
+        builder.Services.AddScoped<IAutomationRule, AutomationRuleService>();
+        builder.Services.AddScoped<ISuppressionList, SuppressionListService>();
+        builder.Services.AddScoped<IRetargetingTag, RetargetingTagService>();
+        builder.Services.AddScoped<ICoupon, CouponService>();
+        builder.Services.AddScoped<IOfferLinkingRule, OfferLinkingRuleService>();
+        builder.Services.AddScoped<ITopOffer, TopOfferService>();
+        builder.Services.AddScoped<ITopOfferMailerLog, TopOfferMailerLogService>();
+        builder.Services.AddScoped<IProductFeed, ProductFeedService>();
+        builder.Services.AddScoped<IMailerTemplate, MailerTemplateService>();
+        builder.Services.AddScoped<ISmtpSetting, SmtpSettingService>();
+        builder.Services.AddScoped<IMailerLog, MailerLogService>();
+        builder.Services.AddScoped<IDefaultMailerTemplate, DefaultMailerTemplateService>();
+        builder.Services.AddScoped<IAutomationLog, AutomationLogService>();
+        builder.Services.AddScoped<ILinkTesterRule, LinkTesterRuleService>();
+        builder.Services.AddScoped<ILinkTestResult, LinkTestResultService>();
+        builder.Services.AddScoped<IShortUrl, ShortUrlService>();
+        builder.Services.AddScoped<INetworkSetting, NetworkSettingService>();
+        builder.Services.AddScoped<IBillingSubscription, BillingSubscriptionService>();
+        builder.Services.AddScoped<IBillingPlanHistoryLog, BillingPlanHistoryLogService>();
         // ---------------- SWAGGER ----------------
         builder.Services.AddSwaggerGen(c =>
         {
