@@ -13,7 +13,7 @@ namespace Service.Service
             {
                 Port = 587,
                 Credentials = new NetworkCredential(
-                    "ab3041364@gmail.com",
+                    "trackingplatform07@gmail.com",
                     "yijktftkaluqtltx"
                 ),
                 EnableSsl = true,
@@ -21,7 +21,7 @@ namespace Service.Service
 
             var mailMessage = new MailMessage
             {
-                From = new MailAddress("ab3041364@gmail.com"), // Sender Email
+                From = new MailAddress("trackingplatform07@gmail.com"), // Sender Email
                 Subject = subject,
                 Body = message,
                 IsBodyHtml = false,
