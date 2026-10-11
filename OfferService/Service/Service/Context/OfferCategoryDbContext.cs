@@ -53,6 +53,8 @@ namespace Service.Context
         public DbSet<ReferredAccount> ReferredAccounts { get; set; }
         public DbSet<SupportTicket> SupportTickets { get; set; }
         public DbSet<KnowledgeArticle> KnowledgeArticles { get; set; }
+        public DbSet<AffiliateInvoice> AffiliateInvoices { get; set; }
+        public DbSet<AffiliateReferral> AffiliateReferrals { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

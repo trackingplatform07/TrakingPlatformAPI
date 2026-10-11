@@ -92,6 +92,8 @@ public class Program
         builder.Services.AddScoped<IReferral, ReferralService>();
         builder.Services.AddScoped<ISupportTicket, SupportTicketService>();
         builder.Services.AddScoped<IKnowledgeArticle, KnowledgeArticleService>();
+        builder.Services.AddScoped<IAffiliateInvoice, AffiliateInvoiceService>();
+        builder.Services.AddScoped<IAffiliateReferral, AffiliateReferralService>();
         // ---------------- SWAGGER ----------------
         builder.Services.AddSwaggerGen(c =>
         {

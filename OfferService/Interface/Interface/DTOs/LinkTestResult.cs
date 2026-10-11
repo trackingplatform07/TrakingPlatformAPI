@@ -11,6 +11,8 @@ namespace Interface.DTOs
         public string Url { get; set; } = string.Empty;
         public string? OsDevice { get; set; }
         public string? Country { get; set; }
+        public string? UserAgent { get; set; }
+        public string? Source { get; set; }
 
         public int? FinalStatusCode { get; set; }
         public int RedirectCount { get; set; }

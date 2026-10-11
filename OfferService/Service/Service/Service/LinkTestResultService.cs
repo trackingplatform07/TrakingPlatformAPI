@@ -25,6 +25,8 @@ namespace Service.Services
             Url = x.Url,
             OsDevice = x.OsDevice,
             Country = x.Country,
+            UserAgent = x.UserAgent,
+            Source = x.Source,
 
             FinalStatusCode = x.FinalStatusCode,
             RedirectCount = x.RedirectCount,
@@ -39,12 +41,15 @@ namespace Service.Services
             IsActive = x.IsActive
         };
 
-        public async Task<IEnumerable<LinkTestResultDTO>> GetAllAsync(long? ruleId)
+        public async Task<IEnumerable<LinkTestResultDTO>> GetAllAsync(long? ruleId, string? source)
         {
             var query = _context.LinkTestResults.Where(x => x.IsActive == true);
 
             if (ruleId.HasValue)
                 query = query.Where(x => x.RuleId == ruleId.Value);
+
+            if (!string.IsNullOrWhiteSpace(source))
+                query = query.Where(x => x.Source == source);
 
             return await query
                 .OrderByDescending(x => x.StartedOn)
@@ -71,7 +76,15 @@ namespace Service.Services
 
             using var handler = new HttpClientHandler { AllowAutoRedirect = false };
             using var client = new HttpClient(handler) { Timeout = TimeSpan.FromSeconds(15) };
-            client.DefaultRequestHeaders.UserAgent.ParseAdd("Offer18-LinkTester/1.0");
+            try
+            {
+                client.DefaultRequestHeaders.UserAgent.ParseAdd(
+                    string.IsNullOrWhiteSpace(request.UserAgent) ? "Offer18-LinkTester/1.0" : request.UserAgent);
+            }
+            catch (FormatException)
+            {
+                client.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", request.UserAgent);
+            }
 
             try
             {
@@ -109,6 +122,8 @@ namespace Service.Services
                 Url = request.Url,
                 OsDevice = request.OsDevice,
                 Country = request.Country,
+                UserAgent = request.UserAgent,
+                Source = request.Source,
 
                 FinalStatusCode = finalStatusCode,
                 RedirectCount = redirectCount,

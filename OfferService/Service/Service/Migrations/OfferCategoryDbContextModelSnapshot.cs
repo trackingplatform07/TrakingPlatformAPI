@@ -60,6 +60,124 @@ namespace Service.Migrations
                     b.ToTable("AccessLogs");
                 });
 
+            modelBuilder.Entity("Interface.DTOs.AffiliateInvoice", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("AffiliateId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("AffiliateName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("DueDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("InvoiceDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("InvoiceNumber")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Note")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("PaymentDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("PeriodEnd")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("PeriodStart")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("TimezoneOffset")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AffiliateInvoices");
+                });
+
+            modelBuilder.Entity("Interface.DTOs.AffiliateReferral", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool?>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("PaymentStatus")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("ReferralPercentage")
+                        .HasColumnType("numeric");
+
+                    b.Property<long>("ReferredAffiliateId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ReferredName")
+                        .HasColumnType("text");
+
+                    b.Property<long>("ReferrerAffiliateId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ReferrerName")
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("TotalCommission")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AffiliateReferrals");
+                });
+
             modelBuilder.Entity("Interface.DTOs.AntiFraudSetting", b =>
                 {
                     b.Property<long>("Id")
@@ -1224,6 +1342,9 @@ namespace Service.Migrations
                     b.Property<long?>("RuleId")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("Source")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("StartedOn")
                         .HasColumnType("timestamp with time zone");
 
@@ -1233,6 +1354,9 @@ namespace Service.Migrations
 
                     b.Property<string>("Url")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserAgent")
                         .HasColumnType("text");
 
                     b.HasKey("Id");

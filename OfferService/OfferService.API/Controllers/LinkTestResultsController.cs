@@ -16,9 +16,9 @@ namespace OfferService.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] long? ruleId)
+        public async Task<IActionResult> GetAll([FromQuery] long? ruleId, [FromQuery] string? source)
         {
-            return Ok(await _service.GetAllAsync(ruleId));
+            return Ok(await _service.GetAllAsync(ruleId, source));
         }
 
         [HttpGet("{id}")]
