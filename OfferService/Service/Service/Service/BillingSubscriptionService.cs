@@ -36,6 +36,18 @@ namespace Service.Services
             BankAccountNumber = x.BankAccountNumber,
             BankIfscSwift = x.BankIfscSwift,
 
+            GstVatNumber = x.GstVatNumber,
+            TaxNumberPan = x.TaxNumberPan,
+            CompanyName = x.CompanyName,
+            CompanyAddress = x.CompanyAddress,
+            Country = x.Country,
+            State = x.State,
+            StateCode = x.StateCode,
+            City = x.City,
+            Zip = x.Zip,
+            Phone = x.Phone,
+            NotificationEmails = x.NotificationEmails,
+
             CreatedOn = x.CreatedOn,
             CreatedBy = x.CreatedBy,
 
@@ -61,6 +73,13 @@ namespace Service.Services
                 ImpressionsLimit = 20000000,
                 AddonsJson = "[{\"name\":\"iGaming\",\"quantity\":9,\"priceMonthly\":9.00},{\"name\":\"LinkTest\",\"quantity\":19,\"priceMonthly\":19.00}]",
                 Status = "Active",
+                TaxNumberPan = "33434",
+                CompanyName = "Demo",
+                CompanyAddress = "Demo",
+                Country = "India",
+                StateCode = "08",
+                Phone = "0000000000",
+                NotificationEmails = "demo40@offer18.com",
                 CreatedOn = DateTime.UtcNow,
                 IsActive = true
             };
@@ -117,6 +136,19 @@ namespace Service.Services
                 IsActive = true
             });
 
+            var invoiceCount = await _context.BillingInvoices.CountAsync();
+            _context.BillingInvoices.Add(new BillingInvoice
+            {
+                InvoiceNumber = $"INV-{invoiceCount + 1:D5}",
+                Type = "Subscription",
+                InvoiceDate = DateTime.UtcNow,
+                Status = "Due",
+                Amount = request.PlanPriceMonthly,
+                CreatedOn = DateTime.UtcNow,
+                CreatedBy = request.ChangedBy,
+                IsActive = true
+            });
+
             await _context.SaveChangesAsync();
 
             return ToDto(entity);
@@ -161,6 +193,29 @@ namespace Service.Services
             return ToDto(entity);
         }
 
+        public async Task<BillingSubscriptionDTO> UpdateBillingProfileAsync(BillingSubscriptionDTO request)
+        {
+            var entity = await EnsureExistsAsync();
+
+            entity.GstVatNumber = request.GstVatNumber;
+            entity.TaxNumberPan = request.TaxNumberPan;
+            entity.CompanyName = request.CompanyName;
+            entity.CompanyAddress = request.CompanyAddress;
+            entity.Country = request.Country;
+            entity.State = request.State;
+            entity.StateCode = request.StateCode;
+            entity.City = request.City;
+            entity.Zip = request.Zip;
+            entity.Phone = request.Phone;
+            entity.NotificationEmails = request.NotificationEmails;
+            entity.ModifiedOn = DateTime.UtcNow;
+            entity.ModifiedBy = request.ModifiedBy;
+
+            await _context.SaveChangesAsync();
+
+            return ToDto(entity);
+        }
+
         public async Task<BillingSubscriptionDTO> CancelAsync(string? cancelledBy)
         {
             var entity = await EnsureExistsAsync();
@@ -182,6 +237,59 @@ namespace Service.Services
             await _context.SaveChangesAsync();
 
             return ToDto(entity);
+        }
+
+        public async Task<BillingUsageDTO> GetUsageAsync()
+        {
+            var entity = await EnsureExistsAsync();
+
+            var now = DateTime.UtcNow;
+            var monthStart = new DateTime(now.Year, now.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+
+            var linkTestRunsThisMonth = await _context.LinkTestResults
+                .Where(x => x.IsActive == true && x.StartedOn >= monthStart)
+                .CountAsync();
+
+            var addonUsage = new List<BillingUsageAddonDTO>();
+            var addons = new List<(string Name, int Quantity)>();
+            try
+            {
+                var parsed = System.Text.Json.JsonSerializer.Deserialize<List<System.Text.Json.JsonElement>>(entity.AddonsJson ?? "[]");
+                if (parsed != null)
+                {
+                    foreach (var item in parsed)
+                    {
+                        var name = item.TryGetProperty("name", out var nameProp) ? nameProp.GetString() ?? "" : "";
+                        var quantity = item.TryGetProperty("quantity", out var qtyProp) ? qtyProp.GetInt32() : 0;
+                        addons.Add((name, quantity));
+                    }
+                }
+            }
+            catch
+            {
+                // ignore malformed addons json
+            }
+
+            if (addons.Any(a => a.Name == "LinkTest"))
+            {
+                addonUsage.Add(new BillingUsageAddonDTO
+                {
+                    ServiceName = "Link Test",
+                    RunTimes = linkTestRunsThisMonth,
+                    UnitsUsed = linkTestRunsThisMonth
+                });
+            }
+
+            return new BillingUsageDTO
+            {
+                ImpressionsUsed = 0,
+                ImpressionsLimit = entity.ImpressionsLimit ?? 0,
+                ClicksUsed = linkTestRunsThisMonth,
+                ClicksUnlimited = entity.ClicksUnlimited,
+                ConversionsUsed = 0,
+                ConversionsLimit = entity.ConversionsLimit ?? 0,
+                AddonUsage = addonUsage
+            };
         }
     }
 }

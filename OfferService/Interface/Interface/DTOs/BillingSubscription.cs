@@ -25,6 +25,19 @@ namespace Interface.DTOs
         public string? BankAccountNumber { get; set; }
         public string? BankIfscSwift { get; set; }
 
+        // Billing Profile
+        public string? GstVatNumber { get; set; }
+        public string? TaxNumberPan { get; set; }
+        public string? CompanyName { get; set; }
+        public string? CompanyAddress { get; set; }
+        public string? Country { get; set; }
+        public string? State { get; set; }
+        public string? StateCode { get; set; }
+        public string? City { get; set; }
+        public string? Zip { get; set; }
+        public string? Phone { get; set; }
+        public string? NotificationEmails { get; set; }
+
         public DateTime? CreatedOn { get; set; }
         public string? CreatedBy { get; set; }
 

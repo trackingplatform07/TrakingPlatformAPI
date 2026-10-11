@@ -41,6 +41,18 @@ namespace Service.Context
         public DbSet<NetworkSetting> NetworkSettings { get; set; }
         public DbSet<BillingSubscription> BillingSubscriptions { get; set; }
         public DbSet<BillingPlanHistoryLog> BillingPlanHistoryLogs { get; set; }
+        public DbSet<BillingInvoice> BillingInvoices { get; set; }
+        public DbSet<CompanyProfile> CompanyProfiles { get; set; }
+        public DbSet<EmployeeAccess> EmployeeAccesses { get; set; }
+        public DbSet<ApiKey> ApiKeys { get; set; }
+        public DbSet<LoginSession> LoginSessions { get; set; }
+        public DbSet<SecuritySetting> SecuritySettings { get; set; }
+        public DbSet<ChangeLog> ChangeLogs { get; set; }
+        public DbSet<AccessLog> AccessLogs { get; set; }
+        public DbSet<ReferralSetting> ReferralSettings { get; set; }
+        public DbSet<ReferredAccount> ReferredAccounts { get; set; }
+        public DbSet<SupportTicket> SupportTickets { get; set; }
+        public DbSet<KnowledgeArticle> KnowledgeArticles { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

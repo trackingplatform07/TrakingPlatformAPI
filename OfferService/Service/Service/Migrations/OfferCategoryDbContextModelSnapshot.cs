@@ -22,6 +22,44 @@ namespace Service.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Interface.DTOs.AccessLog", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("AccessBy")
+                        .HasColumnType("text");
+
+                    b.Property<long?>("EmployeeId")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool?>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("text");
+
+                    b.Property<string>("LogData")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("OccurredOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserInfo")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AccessLogs");
+                });
+
             modelBuilder.Entity("Interface.DTOs.AntiFraudSetting", b =>
                 {
                     b.Property<long>("Id")
@@ -84,6 +122,52 @@ namespace Service.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("AntiFraudSettings");
+                });
+
+            modelBuilder.Entity("Interface.DTOs.ApiKey", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool?>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("KeyCode")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("LastActiveOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("SecretKey")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("WhitelistIp")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ApiKeys");
                 });
 
             modelBuilder.Entity("Interface.DTOs.AutomationLog", b =>
@@ -229,6 +313,196 @@ namespace Service.Migrations
                     b.ToTable("AutomationRules");
                 });
 
+            modelBuilder.Entity("Interface.DTOs.BillingInvoice", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("InvoiceDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("InvoiceNumber")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("PaymentDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("PaymentMethod")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BillingInvoices");
+                });
+
+            modelBuilder.Entity("Interface.DTOs.BillingPlanHistoryLog", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Action")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("ChangedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<string>("FromPlanName")
+                        .HasColumnType("text");
+
+                    b.Property<decimal?>("FromPrice")
+                        .HasColumnType("numeric");
+
+                    b.Property<bool?>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Notes")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ToPlanName")
+                        .HasColumnType("text");
+
+                    b.Property<decimal?>("ToPrice")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BillingPlanHistoryLogs");
+                });
+
+            modelBuilder.Entity("Interface.DTOs.BillingSubscription", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("AddonsJson")
+                        .HasColumnType("text");
+
+                    b.Property<string>("BankAccountHolder")
+                        .HasColumnType("text");
+
+                    b.Property<string>("BankAccountNumber")
+                        .HasColumnType("text");
+
+                    b.Property<string>("BankIfscSwift")
+                        .HasColumnType("text");
+
+                    b.Property<string>("BankName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("City")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("ClicksUnlimited")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("CompanyAddress")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CompanyName")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("ConversionsLimit")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("GstVatNumber")
+                        .HasColumnType("text");
+
+                    b.Property<long?>("ImpressionsLimit")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool?>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("NotificationEmails")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PlanDescription")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PlanName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("PlanPriceMonthly")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("PlanType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("State")
+                        .HasColumnType("text");
+
+                    b.Property<string>("StateCode")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("TaxNumberPan")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Zip")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("BillingSubscriptions");
+                });
+
             modelBuilder.Entity("Interface.DTOs.CappingRule", b =>
                 {
                     b.Property<long>("Id")
@@ -294,6 +568,159 @@ namespace Service.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("CappingRules");
+                });
+
+            modelBuilder.Entity("Interface.DTOs.ChangeLog", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("ActionBy")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ActionType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<long?>("AdvertiserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("AffectedEntity")
+                        .HasColumnType("text");
+
+                    b.Property<long?>("AffiliateId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ChangeType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("LogData")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("OccurredOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<long?>("OfferId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserInfo")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ChangeLogs");
+                });
+
+            modelBuilder.Entity("Interface.DTOs.CompanyProfile", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("AccountEmail")
+                        .HasColumnType("text");
+
+                    b.Property<string>("AccountId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("AccountSecretKey")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Address")
+                        .HasColumnType("text");
+
+                    b.Property<string>("City")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Company")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Contact")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Country")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CustomProfileContact")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CustomProfileEmail")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CustomProfileExtra")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CustomProfileName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CustomProfileSelect")
+                        .HasColumnType("text");
+
+                    b.Property<string>("FirstName")
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("LastName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("SecretKeyGeneratedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("SocialContactPlatform")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SocialContactValue")
+                        .HasColumnType("text");
+
+                    b.Property<string>("State")
+                        .HasColumnType("text");
+
+                    b.Property<string>("TaxGstVat")
+                        .HasColumnType("text");
+
+                    b.Property<string>("TaxIgstVatType")
+                        .HasColumnType("text");
+
+                    b.Property<string>("TaxPan")
+                        .HasColumnType("text");
+
+                    b.Property<decimal?>("TaxPercentage")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("Zip")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CompanyProfiles");
                 });
 
             modelBuilder.Entity("Interface.DTOs.Coupon", b =>
@@ -448,6 +875,59 @@ namespace Service.Migrations
                     b.ToTable("DefaultMailerTemplates");
                 });
 
+            modelBuilder.Entity("Interface.DTOs.EmployeeAccess", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("AvatarColor")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("LastLoginOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("PermissionsCount")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Tag")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("EmployeeAccesses");
+                });
+
             modelBuilder.Entity("Interface.DTOs.EventGoal", b =>
                 {
                     b.Property<long>("Id")
@@ -599,6 +1079,41 @@ namespace Service.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("FallbackIntegrations");
+                });
+
+            modelBuilder.Entity("Interface.DTOs.KnowledgeArticle", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool?>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Summary")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("KnowledgeArticles");
                 });
 
             modelBuilder.Entity("Interface.DTOs.LandingPage", b =>
@@ -807,6 +1322,42 @@ namespace Service.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("LinkTesterRules");
+                });
+
+            modelBuilder.Entity("Interface.DTOs.LoginSession", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<bool?>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("LoginIp")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("LoginOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("SessionId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("SignInCount")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UserAgent")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LoginSessions");
                 });
 
             modelBuilder.Entity("Interface.DTOs.MailerLog", b =>
@@ -1561,6 +2112,76 @@ namespace Service.Migrations
                     b.ToTable("ProductFeeds");
                 });
 
+            modelBuilder.Entity("Interface.DTOs.ReferralSetting", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<bool>("AffiliateDashboardVisible")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ReferralSettings");
+                });
+
+            modelBuilder.Entity("Interface.DTOs.ReferredAccount", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("AccountName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("DueAmount")
+                        .HasColumnType("numeric");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("text");
+
+                    b.Property<bool?>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<decimal>("PaidAmount")
+                        .HasColumnType("numeric");
+
+                    b.Property<decimal>("Profit")
+                        .HasColumnType("numeric");
+
+                    b.Property<DateTime>("SignedUpOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ReferredAccounts");
+                });
+
             modelBuilder.Entity("Interface.DTOs.RetargetingTag", b =>
                 {
                     b.Property<long>("Id")
@@ -1599,6 +2220,43 @@ namespace Service.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("RetargetingTags");
+                });
+
+            modelBuilder.Entity("Interface.DTOs.SecuritySetting", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool?>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("LastPasswordChangeOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("ModifiedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SecuritySettings");
                 });
 
             modelBuilder.Entity("Interface.DTOs.ShortUrl", b =>
@@ -1699,6 +2357,53 @@ namespace Service.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("SmtpSettings");
+                });
+
+            modelBuilder.Entity("Interface.DTOs.SupportTicket", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("AttachmentFileName")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool?>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Query")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Subject")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("TicketNumber")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SupportTickets");
                 });
 
             modelBuilder.Entity("Interface.DTOs.SuppressionList", b =>

@@ -48,10 +48,25 @@ namespace OfferService.API.Controllers
             return Ok(await _service.UpdateBankDetailsAsync(request));
         }
 
+        [HttpPut("billing-profile")]
+        public async Task<IActionResult> UpdateBillingProfile([FromBody] BillingSubscriptionDTO request)
+        {
+            if (request == null)
+                return BadRequest("Invalid billing profile request.");
+
+            return Ok(await _service.UpdateBillingProfileAsync(request));
+        }
+
         [HttpPost("cancel")]
         public async Task<IActionResult> Cancel([FromBody] string? cancelledBy)
         {
             return Ok(await _service.CancelAsync(cancelledBy));
+        }
+
+        [HttpGet("usage")]
+        public async Task<IActionResult> GetUsage()
+        {
+            return Ok(await _service.GetUsageAsync());
         }
     }
 }

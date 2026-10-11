@@ -12,6 +12,10 @@ namespace Interface.Interface
 
         Task<BillingSubscriptionDTO> UpdateBankDetailsAsync(BillingSubscriptionDTO request);
 
+        Task<BillingSubscriptionDTO> UpdateBillingProfileAsync(BillingSubscriptionDTO request);
+
         Task<BillingSubscriptionDTO> CancelAsync(string? cancelledBy);
+
+        Task<BillingUsageDTO> GetUsageAsync();
     }
 }

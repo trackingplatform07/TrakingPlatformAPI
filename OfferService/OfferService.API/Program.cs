@@ -81,6 +81,17 @@ public class Program
         builder.Services.AddScoped<INetworkSetting, NetworkSettingService>();
         builder.Services.AddScoped<IBillingSubscription, BillingSubscriptionService>();
         builder.Services.AddScoped<IBillingPlanHistoryLog, BillingPlanHistoryLogService>();
+        builder.Services.AddScoped<IBillingInvoice, BillingInvoiceService>();
+        builder.Services.AddScoped<ICompanyProfile, CompanyProfileService>();
+        builder.Services.AddScoped<IEmployeeAccess, EmployeeAccessService>();
+        builder.Services.AddScoped<IApiKey, ApiKeyService>();
+        builder.Services.AddScoped<ILoginSession, LoginSessionService>();
+        builder.Services.AddScoped<ISecuritySetting, SecuritySettingService>();
+        builder.Services.AddScoped<IChangeLog, ChangeLogService>();
+        builder.Services.AddScoped<IAccessLog, AccessLogService>();
+        builder.Services.AddScoped<IReferral, ReferralService>();
+        builder.Services.AddScoped<ISupportTicket, SupportTicketService>();
+        builder.Services.AddScoped<IKnowledgeArticle, KnowledgeArticleService>();
         // ---------------- SWAGGER ----------------
         builder.Services.AddSwaggerGen(c =>
         {
